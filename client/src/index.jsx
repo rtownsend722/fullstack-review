@@ -12,20 +12,32 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    $.ajax({
+      method: 'GET',
+      url: 'http://localhost:1128/repos',
+      success: function(data) {
+        //update repos with data from db
+        console.log(data);
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    })
+  }
+
   search (term) {
     console.log(`${term} was searched`);
     // should send a post request to /repos
     $.ajax({
       method: 'POST',
       url: 'http://localhost:1128/repos',
-      data: term,
+      data: {username: term},
       success: function(data) {
-        //do something
-        console.log('successfully posted ', data);
+        console.log(data);
       },
-      error: function(error, data) {
-        //do something
-        console.log('error sending request', error);
+      error: function(error) {
+        console.log(error);
       }
     })
   }

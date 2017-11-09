@@ -1,10 +1,10 @@
 const request = require('request');
 const config = require('../config.js');
 
-let getReposByUsername = (username) => {
+let getReposByUsername = (username, callback) => {
 
   let options = {
-    url: 'https://api.github.com/users/' + username,
+    url: 'https://api.github.com/users/' + username +'/repos',
     headers: {
       'User-Agent': 'request',
       'Authorization': `token ${config.TOKEN}`
@@ -13,10 +13,11 @@ let getReposByUsername = (username) => {
 
   request.get(options, (err, res, body) => {
     if (err) {
-      console.log('encountered error ', err);
+      console.log(err);
     }
-    //return data??
-    console.log(res);
+    let json = JSON.parse(body);
+    console.log(json);
+    callback(json);
   });
 
 }

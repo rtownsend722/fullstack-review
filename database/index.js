@@ -3,25 +3,33 @@ mongoose.connect('mongodb://localhost/fetcher');
 
 
 let repoSchema = mongoose.Schema({
-  //url - we don't want dups
   repoUrl: {type: String, required: true, unique: true},
-  // username
   username: {type: String, required: true},
-  //stars
   stars: {type: Number, required: true}
 });
 
-let Repo = connection.model('Repo', repoSchema);
+let Repo = mongoose.model('Repo', repoSchema);
 
 
-//save function that creates an insance of our Repo model and saves it to the database
+//save function that creates an instance of our Repo model and saves it to the database
 let save = (repoUrl, username, stars) => {
   let repo = new Repo({repoUrl: repoUrl, username: username, stars: stars});
   repo.save((err) => {
     if (err) {
-      console.log(`error saving record: ${repoUrl}, ${username}, ${stars}`)
+      console.log(err);
     }
   })
 }
 
+
+let search = () => {
+  var query = Repo.find({}).
+  limit(25).
+  sort({stars: 1}).
+  select({username: 1, repoUrl: 1});
+  return query;
+}
+
+
 module.exports.save = save;
+module.exports.search = search;

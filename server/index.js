@@ -1,17 +1,36 @@
 const express = require('express');
-let app = express();
+const app = express();
+const bodyParser = require('body-parser');
+const getReposByUsername = require('../helpers/github.js').getReposByUsername;
+const db = require('../database/index.js');
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
 
-app.post('/repos', function (req, res) {
-  console.log(req.data); 
-  res.send('POST request successful');
-  // getReposByUsername(req.data);
+
+app.post('/repos', (req, res) => {
+  console.log(req.body);
+  getReposByUsername(req.body.username, function(res, err) {
+    if (err) {
+      res.sendStatus(404);
+    }
+    res.forEach((item) => {
+      db.save(item.html_url, item.owner.login, item.stargazers_count);
+    });
+  });
+  res.sendStatus(201);
 });
 
 app.get('/repos', function (req, res) {
-  // TODO - your code here!
-  // This route should send back the top 25 repos
+  var reposData = db.search();
+  reposData.exec(function(err, repos) {
+    if (err) {
+      return console.log(err);
+    }
+    res.send(repos);
+  });
 });
 
 let port = 1128;

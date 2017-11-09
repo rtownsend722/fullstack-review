@@ -13,12 +13,12 @@ class App extends React.Component {
     }
   }
 
-  fetch(callback) {
+  getNewData() {
     $.ajax({
       method: 'GET',
       url: 'http://localhost:1128/repos',
       success: (data) => {
-        callback.apply(this, data);
+        this.setState({repos: data});
       },
       error: function(error) {
         console.log(error);
@@ -27,17 +27,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    fetch()
-    // $.ajax({
-    //   method: 'GET',
-    //   url: 'http://localhost:1128/repos',
-    //   success: (data) => {
-    //     this.setState({repos: data});
-    //   },
-    //   error: function(error) {
-    //     console.log(error);
-    //   }
-    // })
+    this.getNewData();
   }
 
   search (term) {
@@ -46,8 +36,8 @@ class App extends React.Component {
       method: 'POST',
       url: 'http://localhost:1128/repos',
       data: {username: term},
-      success: function(data) {
-        console.log(data);
+      success: (data) => {
+        this.getNewData();
       },
       error: function(error) {
         console.log(error);

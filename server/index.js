@@ -10,15 +10,15 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../client/dist'));
 
 app.post('/repos', (req, res) => {
-  getReposByUsername(req.body.username, function(res, err) {
+  getReposByUsername(req.body.username, function(response, err) {
     if (err) {
       res.sendStatus(404);
     }
-    res.forEach((item) => {
+    response.forEach((item) => {
       db.save(item.html_url, item.forks, item.owner.avatar_url, item.name);
     });
+    res.sendStatus(201);
   });
-  res.sendStatus(201);
 });
 
 app.get('/repos', function (req, res) {

@@ -29,7 +29,7 @@ app.get('/repos', function (req, res) {
     if (err) {
       return console.log(err);
     }
-    res.send(repos);
+    res.send(200, repos);
   });
 });
 

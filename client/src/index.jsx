@@ -16,9 +16,8 @@ class App extends React.Component {
     $.ajax({
       method: 'GET',
       url: 'http://localhost:1128/repos',
-      success: function(data) {
-        //update repos with data from db
-        console.log(data);
+      success: (data) => {
+        this.setState({repos: data});
       },
       error: function(error) {
         console.log(error);

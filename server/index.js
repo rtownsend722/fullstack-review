@@ -9,15 +9,13 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../client/dist'));
 
-
 app.post('/repos', (req, res) => {
-  console.log(req.body);
   getReposByUsername(req.body.username, function(res, err) {
     if (err) {
       res.sendStatus(404);
     }
     res.forEach((item) => {
-      db.save(item.html_url, item.owner.login, item.stargazers_count);
+      db.save(item.html_url, item.forks, item.owner.avatar_url, item.name);
     });
   });
   res.sendStatus(201);
@@ -29,7 +27,7 @@ app.get('/repos', function (req, res) {
     if (err) {
       return console.log(err);
     }
-    res.send(200, repos);
+    res.status(200).send(repos);
   });
 });
 

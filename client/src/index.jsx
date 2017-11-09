@@ -4,6 +4,7 @@ import $ from 'jquery';
 import Search from './components/Search.jsx';
 import RepoList from './components/RepoList.jsx';
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -12,12 +13,12 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
+  fetch(callback) {
     $.ajax({
       method: 'GET',
       url: 'http://localhost:1128/repos',
       success: (data) => {
-        this.setState({repos: data});
+        callback.apply(this, data);
       },
       error: function(error) {
         console.log(error);
@@ -25,9 +26,22 @@ class App extends React.Component {
     })
   }
 
+  componentDidMount() {
+    fetch()
+    // $.ajax({
+    //   method: 'GET',
+    //   url: 'http://localhost:1128/repos',
+    //   success: (data) => {
+    //     this.setState({repos: data});
+    //   },
+    //   error: function(error) {
+    //     console.log(error);
+    //   }
+    // })
+  }
+
   search (term) {
     console.log(`${term} was searched`);
-    // should send a post request to /repos
     $.ajax({
       method: 'POST',
       url: 'http://localhost:1128/repos',

@@ -14,10 +14,11 @@ app.post('/repos', (req, res) => {
     if (err) {
       res.sendStatus(404);
     }
-    response.forEach((item) => {
+    response.forEach((item, index) => {
       db.save(item.html_url, item.forks, item.owner.avatar_url, item.name);
     });
-    res.sendStatus(201);
+    //send back total new records added
+    res.status(201).send(JSON.stringify(response.length));
   });
 });
 
@@ -31,7 +32,7 @@ app.get('/repos', function (req, res) {
   });
 });
 
-let port = 1128;
+let port = process.env.PORT || 1128;
 
 app.listen(port, function() {
   console.log(`listening on port ${port}`);
